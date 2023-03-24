@@ -12,16 +12,18 @@ public class Jahoot {
 
 
     public Jahoot(Path questionsFilePath) throws IOException {
-        questions = loadQuestionsFile(questionsFilePath);
-
-        for (JQuestion q : questions)
-            System.out.println(q);
+        loadQuestionsFile(questionsFilePath);
     }
 
 
-    public List<JQuestion> loadQuestionsFile(Path questionsFilePath) throws IOException, NumberFormatException {
+    public List<JQuestion> getQuestions() {
+        return questions;
+    }
+
+
+    public void loadQuestionsFile(Path questionsFilePath) throws IOException, NumberFormatException {
         List<String> lines;
-        List<JQuestion> q = new ArrayList<>();
+        questions = new ArrayList<>();
 
         lines = Files.readAllLines(questionsFilePath, StandardCharsets.UTF_8);
 
@@ -31,6 +33,9 @@ public class Jahoot {
 
             String[] qData = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
+            if (qData.length < 4)
+                continue;
+
             for (int i = 0; i < qData.length; i++) {
                 if (!(qData[i].startsWith("\"") || qData[i].endsWith("\"")))
                     continue;
@@ -38,18 +43,13 @@ public class Jahoot {
                 qData[i] = qData[i].substring(1, qData[i].length() - 1);
             }
 
-            if (qData.length <= 3)
-                continue;
-
             String[] answers = new String[qData.length - 2];
 
             System.arraycopy(qData, 2, answers, 0, qData.length - 2);
 
             JQuestion question = new JQuestion(qData[0], Integer.parseInt(qData[1]), answers);
-            q.add(question);
+            questions.add(question);
         }
-
-        return q;
     }
 
 
@@ -58,6 +58,9 @@ public class Jahoot {
 
         try {
             Jahoot jahoot = new Jahoot(path);
+
+            for (JQuestion q : jahoot.getQuestions())
+                System.out.println(q);
         } catch (Exception e) {
             System.out.println("Could not load Jahoot.");
             e.printStackTrace();
