@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Jahoot {
-    private List<JQuestion> questions = new ArrayList<>();
+    private List<JQuestion> questions;
 
 
     public Jahoot(Path questionsFilePath) throws IOException {
