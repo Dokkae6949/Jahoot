@@ -32,8 +32,10 @@ public class Jahoot {
             String[] qData = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
             for (int i = 0; i < qData.length; i++) {
-                qData[i] = qData[i].replaceAll("\"", "");
-                qData[i] = qData[i].replaceAll("'", "\"");
+                if (!(qData[i].startsWith("\"") || qData[i].endsWith("\"")))
+                    continue;
+
+                qData[i] = qData[i].substring(1, qData[i].length() - 1);
             }
 
             if (qData.length <= 3)
